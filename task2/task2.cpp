@@ -68,6 +68,8 @@ int main() {
       }
     }
   }
+
+  std::cout << "---------------" << '\n';
   int stop;
   cin >> stop;
   return 0;
