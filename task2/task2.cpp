@@ -39,13 +39,25 @@ void printHorse(int[][] position, int rows, int columns) {
 int main() {
   cout << "Hello world!" << '\n';
 
-  int rows = 7;
-  int columns = 9;
+  int accessCount;
+  int flag;
+  int flagR;
+  int numR;
+  int xMin, yMin, x1, y1, x0R, y0R, x0, y0;
 
-  int board[rows][columns];
+  int accessibility[ROWS][COLUMNS];
+  int accessibility1[ROWS][COLUMNS];
+  int board[ROWS][COLUMNS];
+  int board1[ROWS][COLUMNS];
 
-  for (int idx_i = 0; idx_i < rows; idx_i++) {
-    for (int idx_j = 0; idx_j < columns; idx_j++) {
+  int number;
+
+  // step map
+  int horizontal[8] = { 2, 1, -1, -2, -2, -1, 1, 2 };
+  int vertical[8]   = { -1, -2, -2, -1, 1, 2, 2, 1 };
+
+  for (int idx_i = 0; idx_i < ROWS; idx_i++) {
+    for (int idx_j = 0; idx_j < COLUMNS; idx_j++) {
       board[idx_i][idx_j] = 0;
     }
   }
@@ -53,21 +65,37 @@ int main() {
   std::cout << "Field created!" << '\n';
   std::cout << "Write block cells amount." << '\n';
 
-  int buffer = 0;
+  int blockedCellsAmount = 0;
   while (1) {
-    std::cin >> buffer;
-    if (buffer < (rows * columns)) break;
+    std::cin >> blockedCellsAmount;
+    if (blockedCellsAmount < (ROWS * COLUMNS)) break;
     else std::cout << "Error: amount of blocked cells is bigger!" << '\n';
   }
 
-  if (buffer > 0) {
+  if (blockedCellsAmount > 0) {
     std::cout << "Set coords for blocked cell." << '\n';
-    for (int idx_i = 0; idx_i < buffer; idx_i++) {
+    for (int idx_i = 0; idx_i < blockedCellsAmount; idx_i++) {
       while (1) {
-        // std::cin >> /* variable */;
+        std::cin >> x0;
+        std::cin >> y0;
+        x0--; y0--;
+        // system("cls");
+        break;
+        if ((0 <= x0) && (x0 < COLUMNS) && (0 <= y0) && (y0 < ROWS))
+          break;
+        else
+          std::cout << "Error: coords outter of the field." << '\n';
       }
+
+      if (blockedCellsAmount - idx_i > 0)
+        std::cout << "Blocked cell was created, " << blockedCellsAmount << " more left.";
+      else
+        std::cout << "All blocked cell was created";
     }
+  } else {
+    std::cout << "Field without blocked cells." << '\n';
   }
+
 
   std::cout << "---------------" << '\n';
   int stop;
