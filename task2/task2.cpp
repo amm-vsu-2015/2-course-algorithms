@@ -96,6 +96,20 @@ int main() {
     std::cout << "Field without blocked cells." << '\n';
   }
 
+  for (int x0 = 0; x0 < ROWS; x0++) {
+    for (int y0 = 0; y0 < COLUMNS; y0++) {
+      accessCount = 0;
+      for (int idx_i = 0; idx_i <= 7; idx_i++) {
+        x1 += horizontal[idx_i];
+        y1 += vertical[idx_i];
+        
+        if ((0 <= x1) && (x1 <= ROWS) && (0 <= y1) && (y1 < COLUMNS)) 
+          accessCount++;
+      }
+
+      accessibility[x0][y0] = accessCount;
+    }
+  }
 
   std::cout << "---------------" << '\n';
   int stop;
