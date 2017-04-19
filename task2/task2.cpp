@@ -111,6 +111,65 @@ int main() {
     }
   }
 
+
+  std::cout << "Set horse start position (x, y):" << '\n';
+
+  while (1) {
+    // check correct horse position
+    std::cin >> x0;
+    std::cin >> y0;
+    x0--; y0--;
+    if ((0 <= x0) && (x0 <= ROWS) && (0 <= y0) && (y0 < COLUMNS) && (board[x0][y0] > -1))
+      break;
+
+    if (!((0 <= x0) && (x0 <= ROWS) && (0 <= y0) && (y0 < COLUMNS))) {
+      std::cout << "Error: not valid coords: outter of the field." << '\n';
+    } else {
+      std::cout << "Error: not valid field - you cant start from blocked cell" << '\n';
+    }
+  }
+  std::cout << "Horse start from (" << x0 + 1 << ", " << y0 + 1 << ")." << '\n';
+
+  // horse walk
+  number = 1;
+  board[x0][y0] = number;
+  
+  for (number = 2; number < (ROWS * COLUMNS) + 1; number++) {
+    flag = 1;
+    system("cls");
+    std::cout << '\n';
+    printHorse(board, ROWS, COLUMNS);
+    std::cout << '\n';
+
+    std::cout << "Progress: " << number - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << ". Enter for continue..." << '\n';
+
+    for (int idx_i = 0; idx_i <= 7; idx_i++) {
+      x1 = x0 + horizontal[idx_i];
+      y1 = y0 + vertical[idx_i];
+
+      if ((0 <= x1) && (x1 < ROWS) && (0 <= y1) && (y1 < COLUMNS) && (board[x1][y1] = 0)) {
+        accessibility[x1][y1]--;
+
+        if (flag == 1) {
+          xMin = x1;
+          yMin = y1;
+          flag = 0;
+        }
+
+        if (accessibility[x1][y1] < accessibility[xMin][yMin]) {
+          xMin = x1;
+          yMin = y1;
+        }
+      }
+    }
+
+    if (flag == 1) break;
+
+    x0 = xMin;
+    y0 = yMin;
+    board[x0][y0] = number;
+  }
+
   std::cout << "---------------" << '\n';
   int stop;
   cin >> stop;
