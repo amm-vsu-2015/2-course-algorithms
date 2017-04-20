@@ -25,9 +25,15 @@ const int ROWS = 7;
 const int COLUMNS = 9;
 
 void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS);
+void setCoordinates(int &x, int &y);
+
 int isInsideBoard(int x, int y);
+int getBlockedCellsAmount();
+
 
 void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
+  std::cout << '\n';
+
   for (int idx_k = 0; idx_k < ROWS; idx_k++) {
     for (int idx_s = 0; idx_s < COLUMNS; idx_s++) {
       if (position[idx_k][idx_s] == -1) std::cout << setw(8) <<  " [*]";
@@ -36,6 +42,8 @@ void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
     }
     std::cout << '\n' << '\n';
   }
+
+  std::cout << '\n';
 }
 
 int isInsideBoard(int x, int y) {
@@ -45,11 +53,29 @@ int isInsideBoard(int x, int y) {
     return 0;
 }
 
+int getBlockedCellsAmount() {
+  int blockedCellsAmount = 0;
+
+  while (1) {
+    std::cin >> blockedCellsAmount;
+    if (blockedCellsAmount < (ROWS * COLUMNS)) break;
+    else std::cout << "Error: amount of blocked cells is bigger!" << '\n';
+  }
+
+  return blockedCellsAmount;
+}
+
+
+void setCoordinates(int &x, int &y) {
+  std::cin >> x;
+  std::cin >> y;
+  x--; y--;
+}
+
 
 int main() {
 
   int accessCount = 0, isStepDenied = 0, x_min = 0, y_min = 0, x = 0, y = 0, x_raw = 0, y_raw = 0;
-
   int accessibility[ROWS][COLUMNS];
   int board[ROWS][COLUMNS];
 
@@ -67,19 +93,13 @@ int main() {
   std::cout << "Write block cells amount." << '\n';
 
   int blockedCellsAmount = 0;
-  while (1) {
-    std::cin >> blockedCellsAmount;
-    if (blockedCellsAmount < (ROWS * COLUMNS)) break;
-    else std::cout << "Error: amount of blocked cells is bigger!" << '\n';
-  }
+  blockedCellsAmount = getBlockedCellsAmount();
 
   if (blockedCellsAmount > 0) {
     std::cout << "Set coords for blocked cell." << '\n';
     for (int idx_i = 1; idx_i <= blockedCellsAmount; idx_i++) {
       while (1) {
-        std::cin >> x_raw;
-        std::cin >> y_raw;
-        x_raw--; y_raw--;
+        setCoordinates(x_raw, y_raw);
 
         if (isInsideBoard(x_raw, y_raw))
           break;
@@ -117,16 +137,14 @@ int main() {
 
   while (1) {
     // check correct horse position
-    std::cin >> x_raw;
-    std::cin >> y_raw;
-    x_raw--; y_raw--;
+    setCoordinates(x_raw, y_raw);
 
     if (isInsideBoard(x_raw, y_raw) && (board[x_raw][y_raw] > -1)) break;
 
-    if (!isInsideBoard(x_raw, y_raw))
-      std::cout << "Error: not valid coords: outter of the field." << '\n';
-    else
+    if (isInsideBoard(x_raw, y_raw))
       std::cout << "Error: not valid field - you cant start from blocked cell" << '\n';
+    else
+      std::cout << "Error: not valid coords: outter of the field." << '\n';
   }
 
   std::cout << "Horse start from (" << x_raw + 1 << ", " << y_raw + 1 << ")." << '\n';
@@ -165,9 +183,7 @@ int main() {
   }
 
   // system("cls");
-  std::cout << '\n';
   printHorse(board, ROWS, COLUMNS);
-  std::cout << '\n';
 
   std::cout << "Progress: " << stepNumber - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << ". Enter for continue..." << '\n';
 
