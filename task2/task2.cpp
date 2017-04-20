@@ -10,7 +10,8 @@
   Входные данные для проверки:
 
   (1) Координаты заблокированных клеток: (1,1), (2,2).
-      Старт фигуры с координат: (1,3),
+      Старт фигуры с координат: (1,3) - не полный обход
+      Старт фигуры с координат: (1,3) - успех
 
 */
 
@@ -36,7 +37,7 @@ void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
 
   for (int idx_k = 0; idx_k < ROWS; idx_k++) {
     for (int idx_s = 0; idx_s < COLUMNS; idx_s++) {
-      if (position[idx_k][idx_s] == -1) std::cout << setw(8) <<  " [*]";
+      if (position[idx_k][idx_s] == -1) std::cout << setw(8) <<  " [#]";
       if (position[idx_k][idx_s] == 0)  std::cout << setw(8) <<  " [ ]";
       if (position[idx_k][idx_s] >  0)  std::cout << setw(8) << position[idx_k][idx_s];
     }
@@ -185,7 +186,7 @@ int main() {
   // system("cls");
   printHorse(board, ROWS, COLUMNS);
 
-  std::cout << "Progress: " << stepNumber - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << ". Enter for continue..." << '\n';
+  std::cout << "Progress: " << stepNumber - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << '\n';
 
   std::cout << '\n';
   std::cout << "Horse completed walk! -> " << stepNumber - 1 << " steps."   << '\n';
