@@ -21,41 +21,37 @@
 
 using namespace std;
 
-const int ROWS = 7; // m
-const int COLUMNS = 9; // n
+const int ROWS = 7;
+const int COLUMNS = 9;
 
 void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS);
+int isInsideBoard(int x, int y);
 
 void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
-
-  // std::cout.precision(4);     // accc
   for (int idx_k = 0; idx_k < ROWS; idx_k++) {
     for (int idx_s = 0; idx_s < COLUMNS; idx_s++) {
       if (position[idx_k][idx_s] == -1) std::cout << setw(8) <<  " [*]";
       if (position[idx_k][idx_s] == 0)  std::cout << setw(8) <<  " [ ]";
-
-      if ((0 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 10))  std::cout << setw(8) << position[idx_k][idx_s];
-      if ((9 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 100)) std::cout << setw(8) << position[idx_k][idx_s];
-
-      if (position[idx_k][idx_s] >= 100) std::cout << setw(8) << position[idx_k][idx_s] << '\n';
+      if (position[idx_k][idx_s] >  0)  std::cout << setw(8) << position[idx_k][idx_s];
     }
     std::cout << '\n' << '\n';
   }
 }
 
+int isInsideBoard(int x, int y) {
+  if ((0 <= x) && (x < ROWS) && (0 <= y) && (y < COLUMNS))
+    return 1;
+  else
+    return 0;
+}
+
 
 int main() {
 
-  int accessCount = 0;
-  int flag = 0;
-  int flagR = 0;
-  int numR = 0;
-  int xMin = 0, yMin = 0, x1 = 0, y1 = 0, x0R = 0, y0R = 0, x0 = 0, y0 = 0;
+  int accessCount = 0, isStepDenied = 0, x_min = 0, y_min = 0, x = 0, y = 0, x_raw = 0, y_raw = 0;
 
   int accessibility[ROWS][COLUMNS];
   int board[ROWS][COLUMNS];
-
-  int number;
 
   // step map
   int horizontal[8] = { 2, 1, -1, -2, -2, -1, 1, 2 };
@@ -64,7 +60,6 @@ int main() {
   for (int idx_i = 0; idx_i < ROWS; idx_i++) {
     for (int idx_j = 0; idx_j < COLUMNS; idx_j++) {
       board[idx_i][idx_j] = 0;
-      // accessibility[idx_i][idx_j] = 0;
     }
   }
 
@@ -82,17 +77,17 @@ int main() {
     std::cout << "Set coords for blocked cell." << '\n';
     for (int idx_i = 1; idx_i <= blockedCellsAmount; idx_i++) {
       while (1) {
-        std::cin >> x0;
-        std::cin >> y0;
-        x0--; y0--;
+        std::cin >> x_raw;
+        std::cin >> y_raw;
+        x_raw--; y_raw--;
 
-        if ((0 <= x0) && (x0 < ROWS) && (0 <= y0) && (y0 < COLUMNS))
+        if (isInsideBoard(x_raw, y_raw))
           break;
         else
           std::cout << "Error: coords outter of the field." << '\n';
       }
 
-      board[x0][y0] = -1;
+      board[x_raw][y_raw] = -1;
 
       if (blockedCellsAmount - idx_i > 0)
         std::cout << "Blocked cell was created, " << (blockedCellsAmount - idx_i) << " more left." << '\n';
@@ -104,17 +99,17 @@ int main() {
   }
 
 
-  for (x0 = 0; x0 < ROWS; x0++) {
-    for (y0 = 0; y0 < COLUMNS; y0++) {
+  for (int idx_x = 0; idx_x < ROWS; idx_x++) {
+    for (int idx_y = 0; idx_y < COLUMNS; idx_y++) {
       accessCount = 0;
       for (int idx_i = 0; idx_i < 8; idx_i++) {
-        x1 = x0 + horizontal[idx_i];
-        y1 = y0 + vertical[idx_i];
+        x = idx_x + horizontal[idx_i];
+        y = idx_y + vertical[idx_i];
 
-        if ((0 <= x1) && (x1 < ROWS) && (0 <= y1) && (y1 < COLUMNS)) accessCount++;
+        if (isInsideBoard(x, y)) accessCount++;
       }
 
-      accessibility[x0][y0] = accessCount;
+      accessibility[idx_x][idx_y] = accessCount;
     }
   }
 
@@ -122,52 +117,51 @@ int main() {
 
   while (1) {
     // check correct horse position
-    std::cin >> x0;
-    std::cin >> y0;
-    x0--; y0--;
-    if ((0 <= x0) && (x0 < ROWS) && (0 <= y0) && (y0 < COLUMNS) && (board[x0][y0] > -1))
-      break;
+    std::cin >> x_raw;
+    std::cin >> y_raw;
+    x_raw--; y_raw--;
 
-    if (!((0 <= x0) && (x0 < ROWS) && (0 <= y0) && (y0 < COLUMNS))) {
+    if (isInsideBoard(x_raw, y_raw) && (board[x_raw][y_raw] > -1)) break;
+
+    if (!isInsideBoard(x_raw, y_raw))
       std::cout << "Error: not valid coords: outter of the field." << '\n';
-    } else {
+    else
       std::cout << "Error: not valid field - you cant start from blocked cell" << '\n';
-    }
   }
 
-  std::cout << "Horse start from (" << x0 + 1 << ", " << y0 + 1 << ")." << '\n';
+  std::cout << "Horse start from (" << x_raw + 1 << ", " << y_raw + 1 << ")." << '\n';
 
   // horse walk
-  number = 1;
-  board[x0][y0] = number;
-  int stop = 0;
-  for (number = 2; number <= (ROWS * COLUMNS + 1); number++) {
-    flag = 1;
+  int stepNumber = 1;
+  board[x_raw][y_raw] = stepNumber;
+
+  for (stepNumber = 2; stepNumber <= (ROWS * COLUMNS + 1); stepNumber++) {
+    isStepDenied = 1;
 
     for (int idx_i = 0; idx_i < 8; idx_i++) {
-      x1 = x0 + horizontal[idx_i];
-      y1 = y0 + vertical[idx_i];
+      x = x_raw + horizontal[idx_i];
+      y = y_raw + vertical[idx_i];
 
-      if ((0 <= x1) && (x1 < ROWS) && (0 <= y1) && (y1 < COLUMNS) && (board[x1][y1] == 0)) {
-        accessibility[x1][y1]--;
-        if (flag == 1) {
-          xMin = x1;
-          yMin = y1;
-          flag = 0;
+      if (isInsideBoard(x, y) && (board[x][y] == 0)) {
+        accessibility[x][y]--;
+        if (isStepDenied == 1) {
+          x_min = x;
+          y_min = y;
+          isStepDenied = 0;
         }
 
-        if (accessibility[x1][y1] < accessibility[xMin][yMin]) {
-          xMin = x1;
-          yMin = y1;
+        if (accessibility[x][y] < accessibility[x_min][y_min]) {
+          x_min = x;
+          y_min = y;
         }
       }
     }
 
-    if (flag == 1) break;
+    if (isStepDenied == 1) break;
 
-    x0 = xMin;
-    y0 = yMin;
-    board[x0][y0] = number;
+    x_raw = x_min;
+    y_raw = y_min;
+    board[x_raw][y_raw] = stepNumber;
   }
 
   // system("cls");
@@ -175,13 +169,13 @@ int main() {
   printHorse(board, ROWS, COLUMNS);
   std::cout << '\n';
 
-  std::cout << "Progress: " << number - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << ". Enter for continue..." << '\n';
+  std::cout << "Progress: " << stepNumber - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << ". Enter for continue..." << '\n';
 
   std::cout << '\n';
-  std::cout << "Horse completed walk! -> " << number - 1 << " steps."   << '\n';
+  std::cout << "Horse completed walk! -> " << stepNumber - 1 << " steps."   << '\n';
 
-  if (number <= (ROWS * COLUMNS - blockedCellsAmount)) {
-    std::cout << "Not available steps more! (available " << number - 1 << " steps form " << (ROWS * COLUMNS - blockedCellsAmount) << "). Horse cant move next." << '\n';
+  if (stepNumber <= (ROWS * COLUMNS - blockedCellsAmount)) {
+    std::cout << "Not available steps more! (available " << stepNumber - 1 << " steps form " << (ROWS * COLUMNS - blockedCellsAmount) << "). Horse cant move next." << '\n';
   }
 
   std::cout << "---------------" << '\n' << '\n';
