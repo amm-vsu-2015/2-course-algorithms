@@ -17,6 +17,7 @@
 #include <iostream>
 #include <ctime>
 #include <stdlib.h>
+#include <iomanip>
 
 using namespace std;
 
@@ -30,13 +31,13 @@ void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
   // std::cout.precision(4);     // accc
   for (int idx_k = 0; idx_k < ROWS; idx_k++) {
     for (int idx_s = 0; idx_s < COLUMNS; idx_s++) {
-      if (position[idx_k][idx_s] == -1) std::cout << setw(2) << right <<  " [*] ";
-      if (position[idx_k][idx_s] == 0)  std::cout << setw(2) << right <<  " [.] ";
+      if (position[idx_k][idx_s] == -1) std::cout << setw(8) <<  " [*]";
+      if (position[idx_k][idx_s] == 0)  std::cout << setw(8) <<  " [ ]";
 
-      if ((0 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 10))  std::cout << setw(2) << right << ' ' << position[idx_k][idx_s] << ' ';
-      if ((9 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 100)) std::cout << setw(2) << right << ' ' << position[idx_k][idx_s] << ' ';
+      if ((0 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 10))  std::cout << setw(8) << position[idx_k][idx_s];
+      if ((9 < position[idx_k][idx_s]) && (position[idx_k][idx_s] < 100)) std::cout << setw(8) << position[idx_k][idx_s];
 
-      if (position[idx_k][idx_s] >= 100) std::cout << setw(2) << right << position[idx_k][idx_s] << ' ' << '\n';
+      if (position[idx_k][idx_s] >= 100) std::cout << setw(8) << position[idx_k][idx_s] << '\n';
     }
     std::cout << '\n' << '\n';
   }
@@ -44,8 +45,6 @@ void printHorse(int position[ROWS][COLUMNS], int ROWS, int COLUMNS) {
 
 
 int main() {
-  
-  cout << "Hello world!" << '\n';
 
   int accessCount = 0;
   int flag = 0;
@@ -65,11 +64,11 @@ int main() {
   for (int idx_i = 0; idx_i < ROWS; idx_i++) {
     for (int idx_j = 0; idx_j < COLUMNS; idx_j++) {
       board[idx_i][idx_j] = 0;
-      accessibility[idx_i][idx_j] = 0;
+      // accessibility[idx_i][idx_j] = 0;
     }
   }
 
-  std::cout << "Field created!" << ROWS << COLUMNS << '\n';
+  std::cout << "Field created! Size: " << ROWS << 'x' << COLUMNS << '\n';
   std::cout << "Write block cells amount." << '\n';
 
   int blockedCellsAmount = 0;
@@ -86,15 +85,15 @@ int main() {
         std::cin >> x0;
         std::cin >> y0;
         x0--; y0--;
-        
+
         if ((0 <= x0) && (x0 < ROWS) && (0 <= y0) && (y0 < COLUMNS))
           break;
         else
           std::cout << "Error: coords outter of the field." << '\n';
       }
-      
+
       board[x0][y0] = -1;
-      
+
       if (blockedCellsAmount - idx_i > 0)
         std::cout << "Blocked cell was created, " << (blockedCellsAmount - idx_i) << " more left." << '\n';
       else
@@ -108,10 +107,10 @@ int main() {
   for (x0 = 0; x0 < ROWS; x0++) {
     for (y0 = 0; y0 < COLUMNS; y0++) {
       accessCount = 0;
-      for (int idx_i = 0; idx_i <= 7; idx_i++) {
+      for (int idx_i = 0; idx_i < 8; idx_i++) {
         x1 = x0 + horizontal[idx_i];
         y1 = y0 + vertical[idx_i];
-        
+
         if ((0 <= x1) && (x1 < ROWS) && (0 <= y1) && (y1 < COLUMNS)) accessCount++;
       }
 
@@ -135,7 +134,7 @@ int main() {
       std::cout << "Error: not valid field - you cant start from blocked cell" << '\n';
     }
   }
-  
+
   std::cout << "Horse start from (" << x0 + 1 << ", " << y0 + 1 << ")." << '\n';
 
   // horse walk
@@ -145,7 +144,7 @@ int main() {
   for (number = 2; number <= (ROWS * COLUMNS + 1); number++) {
     flag = 1;
 
-    for (int idx_i = 0; idx_i < 7; idx_i++) {
+    for (int idx_i = 0; idx_i < 8; idx_i++) {
       x1 = x0 + horizontal[idx_i];
       y1 = y0 + vertical[idx_i];
 
@@ -171,7 +170,7 @@ int main() {
     board[x0][y0] = number;
   }
 
-  system("cls");
+  // system("cls");
   std::cout << '\n';
   printHorse(board, ROWS, COLUMNS);
   std::cout << '\n';
@@ -185,7 +184,7 @@ int main() {
     std::cout << "Not available steps more! (available " << number - 1 << " steps form " << (ROWS * COLUMNS - blockedCellsAmount) << "). Horse cant move next." << '\n';
   }
 
-  std::cout << "---------------" << '\n';
-  system("pause");
+  std::cout << "---------------" << '\n' << '\n';
+  // system("pause");
   return 0;
 }
