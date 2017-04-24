@@ -11,7 +11,7 @@
 
   (1) Координаты заблокированных клеток: (1,1), (2,2).
       Старт фигуры с координат: (1,3) - не полный обход
-      Старт фигуры с координат: (1,3) - успех
+      Старт фигуры с координат: (1,2) - успех
 
 */
 
@@ -183,19 +183,17 @@ int main() {
     board[x_raw][y_raw] = stepNumber;
   }
 
-  // system("cls");
   printHorse(board, ROWS, COLUMNS);
 
   std::cout << "Progress: " << stepNumber - 1 << " step of " << (ROWS * COLUMNS - blockedCellsAmount) << '\n';
 
   std::cout << '\n';
-  std::cout << "Horse completed walk! -> " << stepNumber - 1 << " steps."   << '\n';
+  std::cout << "Horse completed walk! -> " << stepNumber - 1 << " steps." << '\n';
 
   if (stepNumber <= (ROWS * COLUMNS - blockedCellsAmount)) {
     std::cout << "Not available steps more! (available " << stepNumber - 1 << " steps form " << (ROWS * COLUMNS - blockedCellsAmount) << "). Horse cant move next." << '\n';
   }
 
   std::cout << "---------------" << '\n' << '\n';
-  // system("pause");
   return 0;
 }
