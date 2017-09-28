@@ -56,6 +56,7 @@ bool tryQueen(int row, int column) {
 void setQueen(int column, int &counter, int solution) {
     if (column == SIZE) counter++;
 
+    // show selected suluions and similar mirrored solution
     if ((counter == solution || counter == 92 - solution + 1) && column == SIZE) {
         showBoard();
         std::cout << '\n';
