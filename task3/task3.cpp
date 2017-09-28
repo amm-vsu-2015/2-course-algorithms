@@ -1,3 +1,16 @@
+
+
+/**
+
+Задача о восьми ферзях:
+1. Узнать количество положение ферзей, при которых они не бьют друг друга.
+2. Выбрать одну пару компинаций (т.к. положения будут зеркальными)
+3. Положения зеркальны относительно горизонтальной плоскости.
+
+Входные данные для проверки: номер решения (1 из 46)
+Результат: вывод решения и решения зеркального ему (относительно нижней границы матрицы)
+
+*/
 #include <iostream>
 
 const int SIZE = 8;
@@ -6,41 +19,31 @@ int board[SIZE][SIZE];
 int results_count = 0;
 
 
-void showBoard()
-{
-    for(int a = 0; a < SIZE; ++a)
-    {
-        for(int b = 0; b < SIZE; ++b)
-        {
-            std::cout << ((board[a][b]) ? "Q " : ". ");
+void showBoard() {
+    for (int idx_a = 0; idx_a < SIZE; ++idx_a) {
+        for (int idx_b = 0; idx_b < SIZE; ++idx_b) {
+            std::cout << ((board[idx_a][idx_b]) ? "O " : ". ");
         }
         std::cout << '\n';
     }
 }
 
 
-bool tryQueen(int row, int column)
-{
-    for(int i = 0; i < column; ++i)
-    {
-        if(board[row][i])
-        {
+bool tryQueen(int row, int column) {
+    for (int idx_i = 0; idx_i < column; ++idx_i) {
+        if (board[row][idx_i]) {
             return false;
         }
     }
 
-    for(int i = 1; i <= column && row-i >= 0; ++i)
-    {
-        if(board[row-i][column-i])
-        {
+    for(int idx_i = 1; idx_i <= column && (row - idx_i >= 0); ++idx_i) {
+        if(board[row - idx_i][column - idx_i]) {
             return false;
         }
     }
 
-    for(int i = 1; i <= column && row+i < SIZE; i++)
-    {
-        if(board[row+i][column-i])
-        {
+    for(int idx_i = 1; idx_i <= column && (row + idx_i < SIZE); idx_i++) {
+        if(board[row + idx_i][column - idx_i]) {
             return false;
         }
     }
@@ -50,32 +53,26 @@ bool tryQueen(int row, int column)
 
 
 
-void setQueen(int column, int &counter, int solution)
-{
+void setQueen(int column, int &counter, int solution) {
     if (column == SIZE) counter++;
 
-    if ((counter == solution || counter == 92 - solution + 1) && column == SIZE)
-    {
+    if ((counter == solution || counter == 92 - solution + 1) && column == SIZE) {
         showBoard();
         std::cout << '\n';
         return;
     }
 
-    for(int i = 0; i < SIZE; ++i)
-    {
-        if(tryQueen(i, column))
-        {
-            board[i][column] = 1;
+    for(int idx_i = 0; idx_i < SIZE; ++idx_i) {
+        if(tryQueen(idx_i, column)) {
+            board[idx_i][column] = 1;
             setQueen(column + 1, counter, solution);
-            board[i][column] = 0;
+            board[idx_i][column] = 0;
         }
     }
-
     return;
 }
 
-int main()
-{
+int main() {
     int counter = 0;
     int solution = 1;
 
