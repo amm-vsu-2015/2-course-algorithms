@@ -36,9 +36,9 @@
 void showBoard();
 
 // checking actual position for set queen
-bool tryQueen(int row, int column)
+bool tryQueen(int row, int column);
 
 // recursive search for position and setting queens
-void setQueen(int column, int &counter, int solution)
+void setQueen(int column, int &counter, int solution);
 
 ```
