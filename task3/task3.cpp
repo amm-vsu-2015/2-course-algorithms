@@ -29,20 +29,25 @@ void showBoard() {
 }
 
 
+/// Queens watch only on row and top left/right diagonalies.
+/// Hey didn't need to know what under them (bc, nothing now).
 bool tryQueen(int row, int column) {
+    // check only columns
     for (int idx_i = 0; idx_i < column; ++idx_i) {
         if (board[row][idx_i]) {
             return false;
         }
     }
 
-    for(int idx_i = 1; idx_i <= column && (row - idx_i >= 0); ++idx_i) {
+    // check diag top left from queen
+    for (int idx_i = 1; idx_i <= column && (row - idx_i >= 0); ++idx_i) {
         if(board[row - idx_i][column - idx_i]) {
             return false;
         }
     }
 
-    for(int idx_i = 1; idx_i <= column && (row + idx_i < SIZE); idx_i++) {
+    // check diag top right from queen
+    for (int idx_i = 1; idx_i <= column && (row + idx_i < SIZE); idx_i++) {
         if(board[row + idx_i][column - idx_i]) {
             return false;
         }
@@ -50,7 +55,6 @@ bool tryQueen(int row, int column) {
 
     return true;
 }
-
 
 
 void setQueen(int column, int &counter, int solution) {
@@ -63,8 +67,8 @@ void setQueen(int column, int &counter, int solution) {
         return;
     }
 
-    for(int idx_i = 0; idx_i < SIZE; ++idx_i) {
-        if(tryQueen(idx_i, column)) {
+    for (int idx_i = 0; idx_i < SIZE; ++idx_i) {
+        if (tryQueen(idx_i, column)) {
             board[idx_i][column] = 1;
             setQueen(column + 1, counter, solution);
             board[idx_i][column] = 0;
@@ -72,6 +76,7 @@ void setQueen(int column, int &counter, int solution) {
     }
     return;
 }
+
 
 int main() {
     int counter = 0;
